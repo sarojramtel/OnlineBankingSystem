@@ -46,6 +46,21 @@
     <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" name="transactionManager">
         <property name="sessionFactory" ref="localSessionFactoryBean"/>
     </bean>
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="angelsdevila@gmail.com" />
+        <property name="password" value="xzdjhzwperawrtey" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.starttls.required">true</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="PasswordEncoder" class="org.springframework.security.crypto.password.PasswordEncoder" abstract="true"/>
+
 
 
 

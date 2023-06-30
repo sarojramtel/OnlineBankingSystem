@@ -3,7 +3,7 @@ package com.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "accountdetails")
+@Table(name = "accountdetails",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_accountNumber",columnNames = "accountNumber")})
 public class AccountDetails {
 
     @Id
@@ -56,6 +56,14 @@ public class AccountDetails {
 
     public void setBalance(String balance) {
         this.balance = balance;
+    }
+
+    public UserDetails getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 
     @Override

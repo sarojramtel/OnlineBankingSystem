@@ -1,25 +1,42 @@
 package com.model;
 
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullFields;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "userdetails")
+@Table(name = "userdetails",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_email",columnNames = {"email"}),
+                                                 @UniqueConstraint(name = "UNIQUE_username",columnNames = {"username"}),
+                                                 @UniqueConstraint(name = "UNIQUE_contact",columnNames = {"contact"})})
 public class UserDetails {
 
+
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int userid;
     private String name;
     private String contact;
+
+    @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
     private String username;
+
     private String password;
     private String photo;
 
-    @OneToMany(mappedBy = "userDetails")
+    @OneToMany(mappedBy = "userDetails",cascade = CascadeType.ALL)
     private List<AccountDetails> accountDetails;
 
-    @OneToMany(mappedBy = "userDetails")
+    @OneToMany(mappedBy = "userDetails",cascade = CascadeType.ALL)
     private List<OtpLog> otpLogs;
 
     public UserDetails(int userId, String name, String contact, String email, String username, String password, String photo) {

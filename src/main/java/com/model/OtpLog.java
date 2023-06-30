@@ -7,12 +7,13 @@ import javax.persistence.*;
 public class OtpLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int sn;
     private String otp;
     private String otpTimestamp;
 
     @ManyToOne
+    @JoinColumn(name = "userId")
     private UserDetails userDetails;
 
     public OtpLog(int sn, String otp, String otpTimestamp, UserDetails userDetails) {
