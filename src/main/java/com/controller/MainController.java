@@ -2,22 +2,14 @@ package com.controller;
 
 import com.model.AccountDetails;
 import com.model.UserDetails;
-import com.service.LogInService;
-import com.service.impl.AccountServiceImpl;
-import com.service.impl.LogInServiceImpl;
-import com.service.impl.OtpServiceImpl;
-//import com.service.impl.SignUpImpl;
-import com.service.impl.SignUpImpl;
-import com.utils.PasswordBcrypt;
+import com.service.TransactionService;
+import com.service.impl.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import javax.validation.Valid;
 
@@ -29,12 +21,14 @@ public class MainController {
     private UserDetails userDetailsTemp;
     private LogInServiceImpl logInService;
     private AccountServiceImpl accountService;
-    public MainController(SignUpImpl s,OtpServiceImpl otpService1,LogInServiceImpl logInService1,AccountServiceImpl accountService){
+    private TransactionServiceImpl transactionService;
+    public MainController(SignUpImpl s,OtpServiceImpl otpService1,LogInServiceImpl logInService1,AccountServiceImpl accountService,TransactionServiceImpl transactionService){
 
         this.signUpImpl = s;
         this.otpService=otpService1;
         this.logInService= logInService1;
         this.accountService=accountService;
+        this.transactionService=transactionService;
     }
 //    public MainController(){}
 
@@ -53,13 +47,6 @@ public class MainController {
         return "login";
     }
 
-
-    @RequestMapping(path = "/processform",method = RequestMethod.POST)
-    public String signUp(@ModelAttribute UserDetails userDetails, Model model){
-            this.signUpImpl.createUser(userDetails);
-            this.userDetailsTemp = userDetails;
-            return "otpVerify";
-    }
 
     @RequestMapping(path = "/verifyotp",method = RequestMethod.POST)
     public String verifyOtp(@RequestParam(name = "otp") String otp,Model model){
@@ -82,6 +69,10 @@ public class MainController {
             return "login";
         }else {
             model.addAttribute("userName",userDetails.getName());
+            AccountDetails accountDetails = accountService.fetchAccountDetails(userDetails);
+            model.addAttribute("accountNum",accountDetails.getAccountNumber());
+            model.addAttribute("accountType",accountDetails.getAccountType());
+            model.addAttribute("balance",accountDetails.getBalance());
             return "dashboard";
         }
     }
@@ -91,6 +82,13 @@ public class MainController {
         AccountDetails accountDetails = accountService.createAccount(this.userDetailsTemp,accountType);
         System.out.println(accountDetails);
         return "login";
+    }
+
+    @RequestMapping(path = "/sendmoney",method = RequestMethod.POST)
+    public String transactAmount(@RequestParam(name = "accountnumber") String accountnumber,Model model){
+
+
+        return "confirm";
     }
 
 }

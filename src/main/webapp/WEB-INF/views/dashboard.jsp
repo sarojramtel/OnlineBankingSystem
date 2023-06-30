@@ -11,7 +11,13 @@
 <head>
     <title>User Dashboard</title>
     <style>
-        #form{
+
+        #formnlog{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+        #sendmoney{
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -20,17 +26,45 @@
             padding: 10px;
             margin: 10px;
         }
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 3px;
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+        #navbar{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #cccccc;
+        }
+        .navitem{
+            margin: 20px;
+            color: #0c6100;
+        }
     </style>
 </head>
 <body>
-<h1 style="text-align: center;color: #4caf50">Welcome ${userName}!!</h1>
-<div style="text-align: center" id="form">
-    <form>
+<div id="navbar">
+<p class="navitem">Balance<br>${balance}</p>
+<h1 style="text-align: center;color: #4caf50" class="navitem">Welcome ${userName}!!</h1>
+<p class="navitem">Account Number<br>${accountNum}<br>${accountType}</p>
+
+</div>
+<div style="text-align: center" id="formnlog">
+    <form id="sendmoney" action="/sendmoney">
         <h2 style="color: #4caf50;">Send Money</h2>
         <input type="text" id="accountnumber" style="width: 400px; padding: 5px;" placeholder="Account Number">
         <input type="text" id="amount" style="width: 400px; padding: 5px;" placeholder="Enter amount">
-        <input type="submit" style="width:200px;background-color: #4caf50; color: white;border-color: #4caf50" value="Send">
+        <input type="submit" value="Send">
     </form>
+    <div id="transactionlog">
+        <h2 style="color: #4caf50;">Transaction Log</h2>
+
+    </div>
 </div>
 
 </body>

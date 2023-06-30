@@ -50,5 +50,11 @@ public class AccountServiceImpl implements AccountService {
         return accountNumber;
     }
 
+    public AccountDetails fetchAccountDetails(UserDetails userDetails){
+        AccountDetails accountDetails = new AccountDetails();
+        accountDetails=accountDao.fetchAccount(userDetails);
+        return accountDetails;
+    }
+
 
 }
