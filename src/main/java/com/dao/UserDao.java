@@ -45,7 +45,7 @@ public class UserDao {
         String hqlQuery="FROM UserDetails u where u.username=:username";
         UserDetails userDetails = hibernateTemplate.execute(session -> {
             Query query = session.createQuery(hqlQuery);
-            query.setParameter("username","username");
+            query.setParameter("username","username11111");
             query.setMaxResults(1);
             return (UserDetails) query.uniqueResult();
         });
