@@ -39,15 +39,27 @@ public class UserDetails {
     @OneToMany(mappedBy = "userDetails",cascade = CascadeType.ALL)
     private List<OtpLog> otpLogs;
 
-    public UserDetails(int userId, String name, String contact, String email, String username, String password, String photo) {
-        this.userid = userId;
+    public UserDetails(int userid, String name, String contact, String email, String username, String password, String photo, List<AccountDetails> accountDetails, List<OtpLog> otpLogs) {
+        this.userid = userid;
         this.name = name;
-        this.email = email;
         this.contact = contact;
+        this.email = email;
         this.username = username;
         this.password = password;
         this.photo = photo;
+        this.accountDetails = accountDetails;
+        this.otpLogs = otpLogs;
     }
+
+//    public UserDetails(int userId, String name, String contact, String email, String username, String password, String photo) {
+//        this.userid = userId;
+//        this.name = name;
+//        this.email = email;
+//        this.contact = contact;
+//        this.username = username;
+//        this.password = password;
+//        this.photo = photo;
+//    }
 
     public UserDetails() {
     }

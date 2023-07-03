@@ -64,6 +64,7 @@ public class MainController {
     public String login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password, Model model){
         System.out.println(password);
         UserDetails userDetails = this.logInService.verifyUser(username,password);
+        userDetailsTemp=userDetails;
         if(userDetails==null){
             model.addAttribute("error","Invalid Credentials");
             return "login";
@@ -85,10 +86,14 @@ public class MainController {
     }
 
     @RequestMapping(path = "/sendmoney",method = RequestMethod.POST)
-    public String transactAmount(@RequestParam(name = "accountnumber") String accountnumber,Model model){
-
-
-        return "confirm";
+    public String transactAmount(@RequestParam(name = "accountnumber") String accountnumber,@RequestParam(name = "amount") String amount,Model model){
+        boolean status = transactionService.transact(userDetailsTemp,accountnumber,amount);
+        if(status){
+            model.addAttribute("confirm","Transaction successful!");
+            AccountDetails accountDetails = accountService.fetchAccountDetails(userDetailsTemp);
+            model.addAttribute("balance",accountDetails.getBalance());
+        }
+        return "dashboard";
     }
 
 }

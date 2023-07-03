@@ -22,6 +22,11 @@
             flex-direction: column;
             align-items: center;
         }
+        #balance{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         input{
             padding: 10px;
             margin: 10px;
@@ -49,17 +54,30 @@
 </head>
 <body>
 <div id="navbar">
-<p class="navitem">Balance<br>${balance}</p>
+    <div id="balance">
+<p class="navitem">Balance<br>
+    <c:if test="${not empty balance}">
+    <div class="error-message" style="color: #4caf50">
+            ${balance}
+    </div>
+    </c:if>
+    </p>
+    </div>
 <h1 style="text-align: center;color: #4caf50" class="navitem">Welcome ${userName}!!</h1>
 <p class="navitem">Account Number<br>${accountNum}<br>${accountType}</p>
 
 </div>
 <div style="text-align: center" id="formnlog">
-    <form id="sendmoney" action="/sendmoney">
+    <form id="sendmoney" action="sendmoney" method="post">
         <h2 style="color: #4caf50;">Send Money</h2>
-        <input type="text" id="accountnumber" style="width: 400px; padding: 5px;" placeholder="Account Number">
-        <input type="text" id="amount" style="width: 400px; padding: 5px;" placeholder="Enter amount">
+        <input type="text" id="accountnumber" name="accountnumber" style="width: 400px; padding: 5px;" placeholder="Account Number">
+        <input type="text" id="amount" name="amount" style="width: 400px; padding: 5px;" placeholder="Enter amount">
         <input type="submit" value="Send">
+        <c:if test="${not empty confirm}">
+            <div class="error-message" style="color: gold">
+                    ${confirm}
+            </div>
+        </c:if>
     </form>
     <div id="transactionlog">
         <h2 style="color: #4caf50;">Transaction Log</h2>
