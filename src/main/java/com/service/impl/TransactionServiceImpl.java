@@ -2,11 +2,12 @@ package com.service.impl;
 
 import com.dao.AccountDao;
 import com.dao.TransactionDao;
+import com.dao.UserDao;
 import com.model.AccountDetails;
-import com.model.TransactionLog;
 import com.model.UserDetails;
 import com.service.TransactionService;
 import com.utils.TransactionStatus;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -16,26 +17,39 @@ public class TransactionServiceImpl implements TransactionService {
 
   private AccountDao accountDao;
   private TransactionDao transactionDao;
+  private UserDao userDao;
 
-  public TransactionServiceImpl(AccountDao accountDao, TransactionDao transactionDao) {
+  public TransactionServiceImpl(AccountDao accountDao, TransactionDao transactionDao,UserDao userDao) {
     this.accountDao = accountDao;
     this.transactionDao = transactionDao;
+    this.userDao=userDao;
   }
 
   @Override
-  public boolean transact(UserDetails userDetails, String toAccNum, String amount) {
+  public String transact(UserDetails userDetails, String toAccNum, String amount) {
     TransactionStatus add = addBalance(toAccNum, amount);
-    String checkSt=checkStatus(add);
+    String checkSt = checkStatus(add);
     System.out.println(checkSt);
-    System.out.println("Transact :"+userDetails);
-    TransactionStatus reduced = reduceBalance(userDetails, amount);
-    String checkSt2=checkStatus(reduced);
-    System.out.println(checkSt2);
-    return (reduced.isStatus() && add.isStatus());
+    if ("addSuccess".matches(checkSt)) {
+      TransactionStatus reduced = reduceBalance(userDetails, amount);
+      String checkSt2 = checkStatus(reduced);
+      System.out.println(checkSt2);
+      if ("reduceSuccess".matches(checkSt2)){
+        return "success";
+      }else {
+        UserDetails userDetails1 =userDao.fetchUserByAcc(accountDao.fetchAccount(toAccNum));
+        TransactionStatus reduced1=reduceBalance(userDetails1,amount);
+        String check=checkStatus(reduced1);
+        return check;
+      }
+    }else {
+      return checkSt;
+    }
+
   }
 
   public TransactionStatus reduceBalance(UserDetails userDetails, String amount) {
-    System.out.println("reduce check1: "+userDetails);
+    System.out.println("reduce check1: " + userDetails);
     AccountDetails accountDetails = accountDao.fetchAccount(userDetails);
     if (Objects.isNull(accountDetails)) {
       throw new RuntimeException("Failed to fetch account");
@@ -91,10 +105,9 @@ public class TransactionServiceImpl implements TransactionService {
     if (transactionStatus.getChangeIndex() == 0) {
       if (transactionStatus.isUserFound()) {
         if (transactionStatus.isStatus()) {
-          return "Amount Reduced";
+          return "reduceSuccess";
         } else {
           return "Reduction Failed";
-
         }
       } else {
         return "Reduction user not found";
@@ -103,17 +116,15 @@ public class TransactionServiceImpl implements TransactionService {
     } else if (transactionStatus.getChangeIndex() == 1) {
       if (transactionStatus.isUserFound()) {
         if (transactionStatus.isStatus()) {
-          return "Amount Added";
+          return "addSuccess";
         } else {
           return "Addition Failed";
-
         }
       } else {
         return "Addition user not found";
       }
     } else {
       return "Unknown Error";
-
     }
   }
 }

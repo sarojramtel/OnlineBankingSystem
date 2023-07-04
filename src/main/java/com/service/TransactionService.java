@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TransactionService {
 
-  boolean transact(UserDetails userDetails, String to, String amount);
+  String  transact(UserDetails userDetails, String to, String amount);
 
   TransactionStatus reduceBalance(UserDetails userDetails, String amount);
 

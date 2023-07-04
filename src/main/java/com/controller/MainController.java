@@ -87,8 +87,8 @@ public class MainController {
 
     @RequestMapping(path = "/sendmoney",method = RequestMethod.POST)
     public String transactAmount(@RequestParam(name = "accountnumber") String accountnumber,@RequestParam(name = "amount") String amount,Model model){
-        boolean status = transactionService.transact(userDetailsTemp,accountnumber,amount);
-        if(status){
+        String status = transactionService.transact(userDetailsTemp,accountnumber,amount);
+        if("success".matches(status)){
             model.addAttribute("confirm","Transaction successful!");
             AccountDetails accountDetails = accountService.fetchAccountDetails(userDetailsTemp);
             model.addAttribute("balance",accountDetails.getBalance());

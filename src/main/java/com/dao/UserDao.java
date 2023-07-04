@@ -1,5 +1,6 @@
 package com.dao;
 
+import com.model.AccountDetails;
 import com.model.UserDetails;
 import org.hibernate.query.Query;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -46,6 +47,17 @@ public class UserDao {
         UserDetails userDetails = hibernateTemplate.execute(session -> {
             Query query = session.createQuery(hqlQuery);
             query.setParameter("username",username);
+            query.setMaxResults(1);
+            return (UserDetails) query.uniqueResult();
+        });
+        System.out.println("Dao :"+userDetails);
+        return userDetails;
+    }
+    public UserDetails fetchUserByAcc(AccountDetails accountDetails){
+        String hqlQuery="FROM UserDetails u where u.accountDetails=:accountdetails";
+        UserDetails userDetails = hibernateTemplate.execute(session -> {
+            Query query = session.createQuery(hqlQuery);
+            query.setParameter("accountdetails",accountDetails);
             query.setMaxResults(1);
             return (UserDetails) query.uniqueResult();
         });
